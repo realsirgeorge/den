@@ -1,0 +1,39 @@
+# This workflow deploys your Next.js application to GitHub Pages.
+    2 name: Deploy to GitHub Pages
+    3 
+    4 on:
+    5   # Triggers the workflow on push events but only for the "main" branch
+    6   push:
+    7     branches: [ "main" ]
+    8   # Allows you to run this workflow manually from the Actions tab
+    9   workflow_dispatch:
+   10 
+   11 jobs:
+   12   deploy:
+   13     runs-on: ubuntu-latest
+   14     steps:
+   15       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+   16       - name: Checkout repository
+   17         uses: actions/checkout@v4
+   18 
+   19       # Sets up Node.js and caches npm dependencies
+   20       - name: Set up Node.js
+   21         uses: actions/setup-node@v4
+   22         with:
+   23           node-version: '20'
+   24           cache: 'npm'
+   25 
+   26       # Installs project dependencies
+   27       - name: Install dependencies
+   28         run: npm install
+   29 
+   30       # Builds the Next.js application and exports it as a static site
+   31       - name: Build project
+   32         run: npm run build # This runs 'next build && next export'
+   33 
+   34       # Deploys the static site to the 'gh-pages' branch
+   35       - name: Deploy to GitHub Pages
+   36         uses: peaceiris/actions-gh-pages@v3
+   37         with:
+   38           github_token: ${{ secrets.GITHUB_TOKEN }}
+   39           publish_dir: ./out
